@@ -5,14 +5,14 @@ _ = require 'lodash'
 exports.accounts = (req = {}) ->
   {id} = req
 
-  if @method is 'patch' then validate req, ['id']
+  if @method is 'PATCH' then validate req, ['id']
 
   route = switch
     when @method is 'PATCH'
       validate req, ['id']
       "accounts/#{id}/configuration"
-    when id? then 'accounts'
-    else "accounts/#{id}"
+    when id? then "accounts/#{id}"
+    else 'accounts'
 
   return @request req, route, false
 
@@ -24,10 +24,8 @@ exports.summary = (req = {}) ->
 exports.instruments = (req = {}) ->
   return @request req, "accounts/#{@options.accountId}/instruments"
 
-# TODO: PATCH /accounts/:accountId/configuration
-exports.configuration = (req = {}) ->
-  return @('patch').request req, "accounts/#{@options.accountId}/instruments"
-
-# TODO: GET /accounts/:accountId/changes
+# GET /accounts/:accountId/changes
 exports.changes = (req = {}) ->
+  validate req, ['sinceTransactionID']
+
   return @request req, "accounts/#{@options.accountId}/changes"

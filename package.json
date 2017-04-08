@@ -4,16 +4,20 @@
   "description": "Super simple implementation of the Oanda fxTrade 2.0 api",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc --reporter=lcov --reporter=text mocha -t 10000 --compilers=coffee:coffeescript/register --require coffee-coverage/register-istanbul --recursive test/unit",
+    "test-watch": "mocha -t 10000 --compilers=coffee:coffeescript/register test/unit -w --recursive"
   },
   "author": "hugo.armstrong@gmail.com",
   "license": "MIT",
   "devDependencies": {
     "chai": "^3.5.0",
+    "coffee-coverage": "^2.0.1",
     "coffeelint": "^1.16.0",
     "coffeelint-newline-at-eof": "^0.4.1",
+    "coffeescript": "^2.0.0-alpha1",
     "mocha": "^3.2.0",
-    "sinon": "^2.1.0"
+    "nyc": "^10.2.0",
+    "testdouble": "^2.1.2"
   },
   "dependencies": {
     "dotenv": "^4.0.0",

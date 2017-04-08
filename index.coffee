@@ -6,7 +6,9 @@ resources = require './lib'
 Subscription = require './lib/subscription'
 
 # Return a replacement with the new httpMethod
-fx = (method) -> _.assign {}, fx, method: _.toUpper method
+fx = (method) ->
+  fx.method = _.toUpper method
+  return fx
 
 # Allows configuration of the fx api
 fx.configure = (options) ->
@@ -19,34 +21,39 @@ fx.setAccount = (id) -> @options.accountId = id
 fx.request = (req, route, checkAccount = true) ->
   _validateRequest @options, checkAccount
 
+  method = @method ? 'GET'
+  @method = null
+
   return rp {
-    @method
+    method
     uri: req.uri ? @endpoint route
     headers: Authorization: "Bearer #{@options.apiKey}"
     body: req.body
     qs: _.omit req, 'body'
     resolveWithFullResponse: req.fullResponse
     simple: false
-    json: true
+    json: req.json ? true
   }
 
 fx.subscribe = (req, route, checkAccount = true) ->
   _validateRequest @options, checkAccount
 
   options = {
-    @method
-    uri: req.uri ? @endpoint route
+    method: @method
+    uri: req.uri ? @endpoint route, 'stream'
     headers: Authorization: "Bearer #{@options.apiKey}"
     qs: _.omit req, 'body'
-    json: true
+    json: req.json ? true
   }
 
-  return new Subscription request options, (err, res) ->
-    if err then throw new Error "Failed to subscribe to: #{uri}"
+  @method = null
 
+  return new Subscription request(options, (err, res) ->
+    if err then throw new Error "Failed to subscribe to: #{options.uri}"
+  ), json: options.json
 
 # Get the fx api endpoint adjusted per route
-fx.endpoint = (route, mode = 'api') ->
+fx.endpoint = (route = '', mode = 'api') ->
   {live, version} = @options
 
   unless mode in ['api', 'stream'] then throw new Error 'invalid mode'
@@ -63,6 +70,16 @@ _validateRequest = (options, checkAccount) ->
   if checkAccount and !options.accountId
     throw new Error 'Account id must be set for this request'
 
+# Ensure deep binding
+_bindAll = (source, target) ->
+  _.each source, (srcFn, srcName) ->
+    target[srcName] = _.bind srcFn, target
+
+    _.each srcFn, (fn, fnName) ->
+      target[srcName][fnName] = _.bind fn, target
+
+  return target
+
 # Bootstrap the api
 bootstrap = ->
   # Configure the defaults here
@@ -72,19 +89,9 @@ bootstrap = ->
     version: 'v3'
   }
 
-  # Set the default http method
-  fx.method = 'GET'
-
   # Attach additional functions to the api
   _.assign fx, resources
 
-  # Ensure binding to fx for all functions
-  _.each resources, (resource, resourceName) ->
-    fx[resourceName] = _.bind resource, fx
-
-    _.each resource, (fn, fnName) ->
-      fx[resourceName][fnName] = _.bind fn, fx
-
-  return fx
+  return _bindAll resources, fx, fx
 
 module.exports = bootstrap()
