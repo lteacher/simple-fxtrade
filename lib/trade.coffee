@@ -3,7 +3,10 @@ _ = require 'lodash'
 
 # GET /accounts/:accountId/trades[/:id]
 exports.trades = (req = {}) ->
-  {id} = req
+  {id, open} = req
+
+  if open then req.state = 'OPEN'
+
   route = switch
     when id? then "accounts/#{@options.accountId}/trades/#{id}"
     else "accounts/#{@options.accountId}/trades"
@@ -16,7 +19,7 @@ exports.trades.close = (req = {}) ->
 
   return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/trades/#{req.id}/close"
 
-# PUT /accounts/:accountId/trades/:id/close
+# PUT /accounts/:accountId/trades/:id/clientExtensions
 exports.trades.clientExtensions = (req = {}) ->
   validate req, ['id']
 

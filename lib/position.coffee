@@ -15,4 +15,4 @@ exports.positions = (req = {}) ->
 exports.positions.close = (req = {}) ->
   validate req, ['id']
 
-  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/trades/#{req.id}/close"
+  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/positions/#{req.id}/close"

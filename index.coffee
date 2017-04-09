@@ -17,6 +17,13 @@ fx.configure = (options) ->
 # Set the account id context as its needed for most routes
 fx.setAccount = (id) -> @options.accountId = id
 
+# Set the accept date time format
+fx.setDateTimeFormat = (format) ->
+  unless format in ['UNIX', 'RFC3339']
+    throw new Error 'invalid date time format'
+
+  @options.dateTimeFormat = format
+
 # Execute a raw request
 fx.request = (req, route, checkAccount = true) ->
   _validateRequest @options, checkAccount
@@ -27,11 +34,13 @@ fx.request = (req, route, checkAccount = true) ->
   return rp {
     method
     uri: req.uri ? @endpoint route
-    headers: Authorization: "Bearer #{@options.apiKey}"
+    headers:
+      Authorization: "Bearer #{@options.apiKey}"
+      'Accept-Datetime-Format': @options.dateTimeFormat
     body: req.body
     qs: _.omit req, 'body'
-    resolveWithFullResponse: req.fullResponse
-    simple: false
+    resolveWithFullResponse: not @options.throwHttpErrors
+    simple: @options.throwHttpErrors
     json: req.json ? true
   }
 
@@ -41,7 +50,9 @@ fx.subscribe = (req, route, checkAccount = true) ->
   options = {
     method: @method
     uri: req.uri ? @endpoint route, 'stream'
-    headers: Authorization: "Bearer #{@options.apiKey}"
+    headers:
+      Authorization: "Bearer #{@options.apiKey}"
+      'Accept-Datetime-Format': @options.dateTimeFormat
     qs: _.omit req, 'body'
     json: req.json ? true
   }
@@ -87,11 +98,13 @@ bootstrap = ->
     apiKey: process.env.OANDA_API_KEY
     live: false
     version: 'v3'
+    dateTimeFormat: 'RFC3339'
+    throwHttpErrors: true
   }
 
   # Attach additional functions to the api
   _.assign fx, resources
 
-  return _bindAll resources, fx, fx
+  return _bindAll resources, fx
 
 module.exports = bootstrap()

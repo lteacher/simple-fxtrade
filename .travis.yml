@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - '7'
+
+sudo: false
+
+after_success:
+  - npm run coverage
+  - npm run build
+
+deploy:
+  provider: npm
+  email: "hugo.armstrong@gmail.com"
+  api_key: $api_key
+  on:
+    tags: true
