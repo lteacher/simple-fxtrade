@@ -20,11 +20,11 @@ describe '--- Integration Tests ---', ->
 
     describe 'PATCH /accounts/:id', ->
       it 'should configure the account', ->
-        {clientConfigureTransaction: {alias}} = await fx('patch').accounts {id, body: alias: 'Default'}
+        {clientConfigureTransaction: {alias}} = await fx('patch').accounts {id, alias: 'Default'}
         expect(alias).to.be.equal 'Default'
 
         # Change back to Primary
-        fx('patch').accounts {id, body: alias: 'Primary'}
+        fx('patch').accounts {id, alias: 'Primary'}
 
     describe 'GET /accounts/:id/summary', ->
       it 'should return the account summary', ->
