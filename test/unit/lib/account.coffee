@@ -29,7 +29,7 @@ describe 'accounts', ->
 
   describe 'PATCH /accounts/:id', ->
     it 'should pass the parameters for patching by id', ->
-      fx('patch').accounts {id, body: alias: 'Default'}
+      fx('patch').accounts {id, alias: 'Default'}
 
       td.verify rp contains
         uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/configuration"
