@@ -20,9 +20,9 @@ class Subscription extends EventEmitter
       @connected = false
       @emit 'error', error
 
-    @stream.on 'end', =>
+    @stream.on 'end', (data) =>
       @connected = false
-      @emit 'end'
+      @emit 'end', data
 
   connect: ->
     @stream()

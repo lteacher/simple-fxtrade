@@ -1,44 +1,58 @@
-_ = require 'lodash'
 {expect} = require 'chai'
-fx = require '../../../'
+td = require 'testdouble'
+contains = td.matchers.contains
+
+fx = {}
+rp = {}
 
 id = '101-011-5748031-001'
 
 describe 'accounts', ->
+  before ->
+    rp = td.replace 'request-promise-native'
+    fx = require '../../../'
+
   describe 'GET /accounts[/:id]', ->
-    it 'should get the accounts', ->
-      {accounts} = await fx.accounts()
+    it 'should pass the parameters got get the accounts', ->
+      fx.accounts()
 
-      expect(_.size(accounts)).to.be.equal 1
+      td.verify rp contains
+        uri: 'https://api-fxpractice.oanda.com/v3/accounts'
+        method: 'GET'
 
-    it 'should return the account by id', ->
-      {account} = await fx.accounts {id}
+    it 'should pass the parameters to get an account by id', ->
+      fx.accounts {id}
 
-      expect(account.id).to.be.equal id
-      expect(account.alias).to.be.equal 'Primary'
+      td.verify rp contains
+        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}"
+        method: 'GET'
 
   describe 'PATCH /accounts/:id', ->
-    it 'should configure the account', ->
-      {clientConfigureTransaction: {alias}} = await fx('patch').accounts {id, body: alias: 'Default'}
-      expect(alias).to.be.equal 'Default'
+    it 'should pass the parameters for patching by id', ->
+      fx('patch').accounts {id, body: alias: 'Default'}
 
-      # Change back to Primary
-      fx('patch').accounts {id, body: alias: 'Primary'}
+      td.verify rp contains
+        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/configuration"
+        method: 'PATCH'
+        body: alias: 'Default'
 
   describe 'GET /accounts/:id/summary', ->
-    it 'should return the account summary', ->
+    it 'should pass the parameters to get the account summary', ->
       fx.setAccount id
-      {account} = await fx.summary()
+      fx.summary()
 
-      expect(account.id).to.be.equal id
+      td.verify rp contains
+        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/summary"
+        method: 'GET'
 
   describe 'GET /accounts/:id/instruments', ->
-    it 'should return the account instruments', ->
+    it 'should pass the parameters to get the account instruments', ->
       fx.setAccount id
-      {instruments} = await fx.instruments()
-      pair = _.first _.filter instruments, name: 'AUD_USD'
+      fx.instruments()
 
-      expect(pair.displayName).to.be.equal 'AUD/USD'
+      td.verify rp contains
+        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/instruments"
+        method: 'GET'
 
   describe 'GET /accounts/:id/changes', ->
     it 'should throw an error if missing required params', ->
@@ -47,8 +61,11 @@ describe 'accounts', ->
         'Required parameters missing: sinceTransactionID'
       )
 
-    it 'should return the account changes', ->
+    it 'should pass the parameters to get the account changes', ->
       fx.setAccount id
-      {changes: {transactions}} = await fx.changes sinceTransactionID: 20
+      fx.changes sinceTransactionID: 20
 
-      expect(_.isEmpty transactions).to.not.be.ok
+      td.verify rp contains
+        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/changes"
+        method: 'GET'
+        qs: sinceTransactionID: 20

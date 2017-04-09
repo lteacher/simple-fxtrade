@@ -1,32 +1,26 @@
-_ = require 'lodash'
 {expect} = require 'chai'
-fx = require '../../../'
+td = require 'testdouble'
+contains = td.matchers.contains
+
+fx = {}
+rp = {}
 
 id = '101-011-5748031-001'
 
 describe 'pricing', ->
+  before ->
+    rp = td.replace 'request-promise-native'
+    fx = require '../../../'
+    fx.setAccount id
+
   describe 'GET /accounts/:id/pricing', ->
     it 'should throw an error if missing required params', ->
-      fx.setAccount id
-
       expect(-> fx.pricing()).to.throw 'Required parameters missing: instruments'
 
-    it 'should return the pricing for an instrument', ->
-      fx.setAccount id
+    it 'should pass the parameters to get the pricing for a list of instruments', ->
+      fx.pricing instruments: 'AUD_USD'
 
-      {prices: [{instrument, type}]} = await fx.pricing instruments: 'AUD_USD'
-      expect(instrument).to.be.equal 'AUD_USD'
-      expect(type).to.be.equal 'PRICE'
-
-  describe 'GET /accounts/:id/pricing/stream', ->
-    it 'should throw an error if missing required params', ->
-      fx.setAccount id
-      expect(-> fx.pricing.stream()).to.throw 'Required parameters missing: instruments'
-
-    it 'should subscribe to the pricing stream', (done) ->
-      fx.setAccount id
-      stream = fx.pricing.stream instruments: 'AUD_USD'
-      stream.on 'data', ({type}) ->
-        expect(type).to.match /PRICE|HEARTBEAT/
-        stream.disconnect()
-        done()
+      td.verify rp contains
+        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/pricing"
+        method: 'GET'
+        qs: instruments: 'AUD_USD'

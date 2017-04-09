@@ -1,11 +1,21 @@
 {
   "name": "simple-fxtrade",
   "version": "0.1.0",
-  "description": "Super simple implementation of the Oanda fxTrade 2.0 api",
+  "description": "A node js wrapper for the Oanda Rest v20 api to make things really simple",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lteacher/simple-fxtrade.git"
+  },
+  "engines": {
+    "node": ">=7.7.1"
+  },
   "scripts": {
-    "test": "nyc --reporter=lcov --reporter=text mocha -t 10000 --compilers=coffee:coffeescript/register --require coffee-coverage/register-istanbul --recursive test/unit",
-    "test-watch": "mocha -t 10000 --compilers=coffee:coffeescript/register test/unit -w --recursive"
+    "build": "coffee -co dist index.coffee; coffee -co dist/lib lib",
+    "clean": "rm -r dist/",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "test": "nyc --reporter=lcov --reporter=text mocha -t 10000 --compilers=coffee:coffeescript/register --require coffee-coverage/register-istanbul --recursive --bail test/unit test/integration",
+    "test-watch": "mocha -t 10000 --compilers=coffee:coffeescript/register test/unit test/integration -w --recursive --bail"
   },
   "author": "hugo.armstrong@gmail.com",
   "license": "MIT",
@@ -15,6 +25,7 @@
     "coffeelint": "^1.16.0",
     "coffeelint-newline-at-eof": "^0.4.1",
     "coffeescript": "^2.0.0-alpha1",
+    "coveralls": "^2.13.0",
     "mocha": "^3.2.0",
     "nyc": "^10.2.0",
     "testdouble": "^2.1.2"

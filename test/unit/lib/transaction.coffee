@@ -1,27 +1,30 @@
 {expect} = require 'chai'
-fx = require '../../../'
+td = require 'testdouble'
+contains = td.matchers.contains
+
+fx = {}
+rp = {}
 
 id = '101-011-5748031-001'
 
 describe 'transactions', ->
+  before ->
+    rp = td.replace 'request-promise-native'
+    fx = require '../../../'
+    fx.setAccount id
+
   describe 'GET /accounts/:accountId/transactions[/:id]', ->
-    it 'should throw an error if missing required params', ->
-      fx.setAccount id
-      {count, pageSize} = await fx.transactions()
-      expect(count).to.be.above 50
-      expect(pageSize).to.be.equal 100
+    it 'should pass the parameters to get the transactions for an account', ->
+      fx.transactions pageSize: 10, type: 'CLIENT_CONFIGURE'
 
-    it 'should return a specified transaction id', ->
-      fx.setAccount id
-      {transaction: {alias, type}} = await fx.transactions id: 10
-      expect(type).to.be.equal 'CLIENT_CONFIGURE'
-      expect(alias).to.be.equal 'Default'
+      td.verify rp contains
+        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/transactions"
+        method: 'GET'
+        qs: pageSize: 10, type: 'CLIENT_CONFIGURE'
 
-  describe 'GET /accounts/:accountId/transactions/stream', ->
-    it 'should subscribe to the transactions stream', (done) ->
-      fx.setAccount id
-      stream = fx.transactions.stream()
-      stream.on 'data', ({type}) ->
-        expect(type).to.be.equal 'HEARTBEAT'
-        stream.disconnect()
-        done()
+    it 'should pass the parameters to get a transaction by id for an account', ->
+      fx.transactions id: 123
+
+      td.verify rp contains
+        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/transactions/123"
+        method: 'GET'

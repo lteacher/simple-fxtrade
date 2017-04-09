@@ -32,6 +32,4 @@ exports.orders.cancel = (req = {}) ->
 exports.orders.clientExtensions = (req = {}) ->
   validate req, ['id']
 
-  return @('put').request
-    body: _.pick(req, ['clientExtensions', 'tradeClientExtensions'])
-    "accounts/#{@options.accountId}/orders/#{req.id}/clientExtensions"
+  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/orders/#{req.id}/clientExtensions"
