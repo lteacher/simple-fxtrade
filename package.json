@@ -1,6 +1,6 @@
 {
   "name": "simple-fxtrade",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A node js wrapper for the Oanda Rest v20 api to make things really simple",
   "main": "dist/index.js",
   "repository": {
@@ -35,5 +35,10 @@
     "lodash": "^4.17.4",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3"
-  }
+  },
+  "keywords": [
+    "forex",
+    "oanda",
+    "fxtrade"
+  ]
 }
