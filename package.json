@@ -11,8 +11,9 @@
     "node": ">=7.7.1"
   },
   "scripts": {
-    "build": "coffee -co dist index.coffee; coffee -co dist/lib lib",
-    "clean": "rm -r dist/",
+    "build": "coffee -co build index.coffee; coffee -co build/lib lib; webpack",
+    "build-webpack": "webpack",
+    "clean": "rm -r dist/ build/",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test": "nyc --reporter=lcov --reporter=text mocha -t 10000 --compilers=coffee:coffeescript/register --require coffee-coverage/register-istanbul --recursive --bail test/unit test/integration",
     "test-watch": "mocha -t 10000 --compilers=coffee:coffeescript/register test/unit test/integration -w --recursive --bail"
@@ -20,18 +21,23 @@
   "author": "hugo.armstrong@gmail.com",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
     "chai": "^3.5.0",
     "coffee-coverage": "^2.0.1",
     "coffeelint": "^1.16.0",
     "coffeelint-newline-at-eof": "^0.4.1",
     "coffeescript": "^2.0.0-alpha1",
     "coveralls": "^2.13.0",
+    "dotenv": "^4.0.0",
+    "json-loader": "^0.5.4",
     "mocha": "^3.2.0",
     "nyc": "^10.2.0",
-    "testdouble": "^2.1.2"
+    "testdouble": "^2.1.2",
+    "webpack": "^3.3.0"
   },
   "dependencies": {
-    "dotenv": "^4.0.0",
     "lodash": "^4.17.4",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3"

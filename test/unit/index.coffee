@@ -1,3 +1,4 @@
+require('dotenv').load silent: true
 _ = require 'lodash'
 {expect} = require 'chai'
 td = require 'testdouble'

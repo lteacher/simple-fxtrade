@@ -1,4 +1,3 @@
-require('dotenv').load silent: true
 _ = require 'lodash'
 rp = require 'request-promise-native'
 request = require 'request'
