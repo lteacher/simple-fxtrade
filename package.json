@@ -1,8 +1,9 @@
 {
   "name": "simple-fxtrade",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "A node js wrapper for the Oanda Rest v20 api to make things really simple",
-  "main": "dist/index.js",
+  "main": "dist/node.js",
+  "browser": "dist/browser.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/lteacher/simple-fxtrade.git"
@@ -11,7 +12,7 @@
     "node": ">=7.7.1"
   },
   "scripts": {
-    "build": "coffee -co build index.coffee; coffee -co build/lib lib; webpack",
+    "build": "coffee -co build index.coffee; coffee -co build/lib lib; webpack -p",
     "build-webpack": "webpack",
     "clean": "rm -r dist/ build/",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
@@ -38,7 +39,14 @@
     "webpack": "^3.3.0"
   },
   "dependencies": {
-    "lodash": "^4.17.4",
+    "lodash.assign": "^4.2.0",
+    "lodash.bind": "^4.2.1",
+    "lodash.difference": "^4.5.0",
+    "lodash.foreach": "^4.5.0",
+    "lodash.isempty": "^4.4.0",
+    "lodash.keys": "^4.2.0",
+    "lodash.omit": "^4.5.0",
+    "lodash.toupper": "^4.1.2",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3"
   },

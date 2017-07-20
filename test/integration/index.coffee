@@ -1,7 +1,7 @@
 require('dotenv').load silent: true
 _ = require 'lodash'
 {expect} = require 'chai'
-fx = require '../../'
+fx = require '../../index'
 
 id = '101-011-5748031-001'
 

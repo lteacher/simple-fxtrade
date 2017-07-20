@@ -1,55 +1,29 @@
 const path = require('path');
 
-module.exports = {
-  entry: "./build/index.js", // string | object | array
-  // Here the application starts executing
-  // and webpack starts bundling
+const browser = {
+  entry: "./build/index.js",
 
   output: {
-    // options related to how webpack emits results
-
-    path: path.resolve(__dirname, "dist"), // string
-    // the target directory for all output files
-    // must be an absolute path (use the Node.js path module)
-
-    filename: "index.js", // string
-    // the filename template for entry chunks
-
-    // publicPath: "/assets/", // string
-    // the url to the output directory resolved relative to the HTML page
-
-    // library: "MyLibrary", // string,
-    // the name of the exported library
-
-    // libraryTarget: "umd", // universal module definition
-    // the type of the exported library
-
-    /* Advanced output configuration (click to show) */
+    path: path.resolve(__dirname, "dist"),
+    filename: "browser.js",
+    library: "fx",
+    libraryTarget: "umd",
   },
 
   module: {
-    // configuration regarding modules
-
     rules: [
-      // rules for modules (configure loaders, parser options, etc.)
       {
         loader: "babel-loader",
-        // the loader which should be applied, it'll be resolved relative to the context
-        // -loader suffix is no longer optional in webpack2 for clarity reasons
-        // see webpack 1 upgrade guide
 
         options: {
           presets: ["env"]
         },
-        // options for the loader
       },
       {
         test: /\.json$/,
         loader: 'json-loader'
       },
     ],
-
-    /* Advanced module configuration (click to show) */
   },
 
   node: {
@@ -58,33 +32,34 @@ module.exports = {
     net: 'empty',
     tls: 'empty'
   },
+}
 
-  resolve: {
-    // options for resolving module requests
-    // (does not apply to resolving to loaders)
+const node = {
+  entry: "./build/index.js",
 
-    // modules: [
-    //   "node_modules",
-    //   path.resolve(__dirname, "node_modules")
-    // ],
-    // directories where to look for modules
+  target: 'node',
 
-    // extensions: [".js", "json"],
-    // extensions that are used
-
-    /* alternative alias syntax (click to show) */
-
-    /* Advanced resolve configuration (click to show) */
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "node.js",
+    libraryTarget: "umd",
   },
 
-  context: __dirname, // string (absolute path!)
-  // the home directory for webpack
-  // the entry and module.rules.loader option
-  //   is resolved relative to this directory
+  module: {
+    rules: [
+      {
+        loader: "babel-loader",
 
-  // target: "node", // enum
-  // the environment in which the bundle should run
-  // changes chunk loading behavior and available modules
-
-  /* Advanced configuration (click to show) */
+        options: {
+          presets: ["env"]
+        },
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
+    ],
+  },
 }
+
+module.exports = [browser, node];

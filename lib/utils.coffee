@@ -1,4 +1,4 @@
-_ = require 'lodash'
+_ = require './lodash'
 
 exports.validate = (req, required) ->
   invalid = _.difference required, _.keys req

@@ -1,4 +1,4 @@
-_ = require 'lodash'
+_ = require './lodash'
 {validate} = require './utils'
 
 # GET /accounts/:accountId/transactions[/:id]

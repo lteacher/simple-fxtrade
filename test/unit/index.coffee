@@ -10,7 +10,7 @@ rp = {}
 
 disableMocks = ->
   td.reset()
-  fx = require '../../'
+  fx = require '../../index'
 
 afterEach -> td.reset()
 
@@ -19,7 +19,7 @@ describe '--- Unit Tests ---', ->
   beforeEach ->
     request = td.replace 'request'
     rp = td.replace 'request-promise-native'
-    fx = require '../../'
+    fx = require '../../index'
 
 
   describe 'main package', ->
