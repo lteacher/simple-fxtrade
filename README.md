@@ -18,14 +18,28 @@ Here is an example:
 ```javascript
 const fx = require('simple-fxtrade');
 
-// Get accounts for authorized user (using OANDA_API_KEY env var)
-const {accounts: [{id}]} = await fx.accounts()
+// Just an example, you need an async function to use async / await
+const run = async () => {
 
-// Set the id context for all future api calls
-fx.setAccount(id);
+  // Configure api key, you can set env: OANDA_API_KEY instead and remove this call
+  fx.configure({
+      apiKey: 'your-api-key-per-oanda-docs',
+  });
 
-// Get the instruments for the account
-const {instruments} = await fx.instruments();
+  // Get accounts for authorized user (using OANDA_API_KEY env var)
+  const {accounts: [{id}]} = await fx.accounts()
+
+  // Set the id context for all future api calls
+  fx.setAccount(id);
+
+  // Get the instruments for the account
+  const {instruments} = await fx.instruments();
+
+  console.log(instruments); // [...] logs many instruments
+}
+
+// Call the above function. Included to reduce any possible confusion
+run();
 ```
 
 ## Install
