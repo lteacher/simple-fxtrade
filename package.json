@@ -29,7 +29,7 @@
     "coffee-coverage": "^2.0.1",
     "coffeelint": "^1.16.0",
     "coffeelint-newline-at-eof": "^0.4.1",
-    "coffeescript": "^2.0.0-alpha1",
+    "coffeescript": "^2.0.0-beta3",
     "coveralls": "^2.13.0",
     "dotenv": "^4.0.0",
     "json-loader": "^0.5.4",
