@@ -1,6 +1,7 @@
+require('dotenv').load silent: true
 _ = require 'lodash'
 {expect} = require 'chai'
-fx = require '../../'
+fx = require '../../index'
 
 id = '101-011-5748031-001'
 
@@ -44,7 +45,7 @@ describe '--- Integration Tests ---', ->
     describe 'GET /accounts/:id/changes', ->
       it 'should return the account changes', ->
         fx.setAccount id
-        {changes: {transactions}} = await fx.changes sinceTransactionID: 160
+        {changes: {transactions}} = await fx.changes sinceTransactionID: 179
 
         expect(_.isEmpty transactions).to.not.be.ok
 

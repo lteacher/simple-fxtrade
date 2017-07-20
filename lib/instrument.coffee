@@ -1,4 +1,4 @@
-_ = require 'lodash'
+_ = require './lodash'
 {validate} = require './utils'
 
 # GET /instruments/:accountId/candles

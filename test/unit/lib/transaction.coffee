@@ -10,7 +10,7 @@ id = '101-011-5748031-001'
 describe 'transactions', ->
   before ->
     rp = td.replace 'request-promise-native'
-    fx = require '../../../'
+    fx = require '../../../index'
     fx.setAccount id
 
   describe 'GET /accounts/:accountId/transactions[/:id]', ->

@@ -11,7 +11,9 @@
 
 This package is a wrapper around the [Oanda Rest-v20 api][oanda-api]. All request parameters, payloads or response structures are documented there so you won't find that information here.
 
-The purpose of this package is to simplify the url constructions and expose the endpoints in a simple way for any Nodejs (v7+) based projects. Here is an example:
+The purpose of this package is to simplify the url constructions and expose the endpoints in a nice way for any Nodejs based projects. The package should also work as described in browsers via `fx` global or by `require` / `import`. 
+
+Here is an example:
 
 ```javascript
 const fx = require('simple-fxtrade');

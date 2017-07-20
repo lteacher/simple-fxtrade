@@ -1,4 +1,4 @@
-_ = require 'lodash'
+_ = require './lodash'
 {EventEmitter} = require 'events'
 
 class Subscription extends EventEmitter
