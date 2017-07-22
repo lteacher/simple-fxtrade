@@ -1,4 +1,4 @@
-_ = require 'lodash'
+_ = require './lib/lodash'
 rp = require 'request-promise-native'
 request = require 'request'
 resources = require './lib'
