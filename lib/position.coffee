@@ -1,5 +1,4 @@
-_ = require './lodash'
-{validate} = require './utils'
+{omit, validate} = require './utils'
 
 # GET /accounts/:accountId/[positions[/:id]|openPositions]
 exports.positions = (req = {}) ->
@@ -15,4 +14,4 @@ exports.positions = (req = {}) ->
 exports.positions.close = (req = {}) ->
   validate req, ['id']
 
-  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/positions/#{req.id}/close"
+  return @('put').request body: omit(req, 'id'), "accounts/#{@options.accountId}/positions/#{req.id}/close"

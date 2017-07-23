@@ -1,6 +1,4 @@
-_ = require './lodash'
-
-module.exports = _.assign {},
+module.exports = Object.assign {},
   require './account'
   require './instrument'
   require './order'

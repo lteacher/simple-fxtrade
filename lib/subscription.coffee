@@ -1,4 +1,3 @@
-_ = require './lodash'
 {EventEmitter} = require 'events'
 
 class Subscription extends EventEmitter
@@ -8,7 +7,7 @@ class Subscription extends EventEmitter
 
     @connected = false
     @stream = stream
-    @options = _.assign {}, json: true, options
+    @options = Object.assign {}, json: true, options
 
     @stream.on 'data', (data) =>
       @connected = true

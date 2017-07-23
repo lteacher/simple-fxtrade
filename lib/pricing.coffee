@@ -1,4 +1,3 @@
-_ = require './lodash'
 {validate} = require './utils'
 
 # GET /accounts/:id/pricing

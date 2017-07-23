@@ -1,5 +1,4 @@
-_ = require './lodash'
-{validate} = require './utils'
+{omit, validate} = require './utils'
 
 # GET /accounts/:accountId/trades[/:id]
 exports.trades = (req = {}) ->
@@ -17,16 +16,16 @@ exports.trades = (req = {}) ->
 exports.trades.close = (req = {}) ->
   validate req, ['id']
 
-  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/trades/#{req.id}/close"
+  return @('put').request body: omit(req, 'id'), "accounts/#{@options.accountId}/trades/#{req.id}/close"
 
 # PUT /accounts/:accountId/trades/:id/clientExtensions
 exports.trades.clientExtensions = (req = {}) ->
   validate req, ['id']
 
-  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/trades/#{req.id}/clientExtensions"
+  return @('put').request body: omit(req, 'id'), "accounts/#{@options.accountId}/trades/#{req.id}/clientExtensions"
 
 # PUT /accounts/:accountId/trades/:id/orders
 exports.trades.orders = (req = {}) ->
   validate req, ['id']
 
-  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/trades/#{req.id}/orders"
+  return @('put').request body: omit(req, 'id'), "accounts/#{@options.accountId}/trades/#{req.id}/orders"

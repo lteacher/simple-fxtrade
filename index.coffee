@@ -1,17 +1,17 @@
-_ = require 'lodash'
 rp = require 'request-promise-native'
 request = require 'request'
 resources = require './lib'
 Subscription = require './lib/subscription'
+{omit} = require './lib/utils'
 
 # Return a replacement with the new httpMethod
 fx = (method) ->
-  fx.method = _.toUpper method
+  fx.method = method.toUpperCase()
   return fx
 
 # Allows configuration of the fx api
 fx.configure = (options) ->
-  @options = _.assign {}, @options, options
+  @options = Object.assign {}, @options, options
 
 # Set the account id context as its needed for most routes
 fx.setAccount = (id) -> @options.accountId = id
@@ -37,7 +37,7 @@ fx.request = (req, route, checkAccount = true) ->
       Authorization: "Bearer #{@options.apiKey}"
       'Accept-Datetime-Format': @options.dateTimeFormat
     body: req.body
-    qs: _.omit req, 'body'
+    qs: omit req, 'body'
     resolveWithFullResponse: not @options.throwHttpErrors
     simple: @options.throwHttpErrors
     json: req.json ? true
@@ -52,7 +52,7 @@ fx.subscribe = (req, route, checkAccount = true) ->
     headers:
       Authorization: "Bearer #{@options.apiKey}"
       'Accept-Datetime-Format': @options.dateTimeFormat
-    qs: _.omit req, 'body'
+    qs: omit req, 'body'
     json: req.json ? true
   }
 
@@ -82,11 +82,11 @@ _validateRequest = (options, checkAccount) ->
 
 # Ensure deep binding
 _bindAll = (source, target) ->
-  _.each source, (srcFn, srcName) ->
-    target[srcName] = _.bind srcFn, target
+  for srcName of source
+    target[srcName] = source[srcName].bind target
 
-    _.each srcFn, (fn, fnName) ->
-      target[srcName][fnName] = _.bind fn, target
+    for fnName of source[srcName]
+      target[srcName][fnName] = source[srcName][fnName].bind target
 
   return target
 
@@ -102,7 +102,7 @@ bootstrap = ->
   }
 
   # Attach additional functions to the api
-  _.assign fx, resources
+  Object.assign fx, resources
 
   return _bindAll resources, fx
 

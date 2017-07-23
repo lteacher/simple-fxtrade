@@ -1,5 +1,4 @@
-_ = require './lodash'
-{validate} = require './utils'
+{validate, omit} = require './utils'
 
 # GET /accounts/:accountId/orders[/:id]
 exports.orders = (req = {}) ->
@@ -20,16 +19,16 @@ exports.orders.create = (req = {}) ->
 exports.orders.replace = (req = {}) ->
   validate req, ['id', 'order']
 
-  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/orders/#{req.id}"
+  return @('put').request body: omit(req, 'id'), "accounts/#{@options.accountId}/orders/#{req.id}"
 
 # PUT /accounts/:accountId/orders/:id/cancel
 exports.orders.cancel = (req = {}) ->
   validate req, ['id']
 
-  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/orders/#{req.id}/cancel"
+  return @('put').request body: omit(req, 'id'), "accounts/#{@options.accountId}/orders/#{req.id}/cancel"
 
 # PUT /accounts/:accountId/orders/:id/clientExtensions
 exports.orders.clientExtensions = (req = {}) ->
   validate req, ['id']
 
-  return @('put').request body: _.omit(req, 'id'), "accounts/#{@options.accountId}/orders/#{req.id}/clientExtensions"
+  return @('put').request body: omit(req, 'id'), "accounts/#{@options.accountId}/orders/#{req.id}/clientExtensions"
