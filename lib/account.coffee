@@ -1,5 +1,4 @@
-_ = require './lodash'
-{validate} = require './utils'
+{validate, omit} = require './utils'
 
 # GET | PATCH /accounts[/:id]
 exports.accounts = (req = {}) ->
@@ -8,7 +7,7 @@ exports.accounts = (req = {}) ->
   if @method is 'PATCH'
     validate req, ['id']
 
-    return @request body: _.omit(req, 'id'), "accounts/#{id}/configuration", false
+    return @request body: omit(req, 'id'), "accounts/#{id}/configuration", false
 
   route = switch
     when id? then "accounts/#{id}"

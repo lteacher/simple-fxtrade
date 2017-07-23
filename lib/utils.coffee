@@ -1,7 +1,12 @@
-_ = require './lodash'
-
 exports.validate = (req, required) ->
-  invalid = _.difference required, _.keys req
+  keys = Object.keys req
 
-  if not _.isEmpty invalid
-    throw new Error "Required parameters missing: #{invalid.join ', '}"
+  invalid = (param for param in required when param not in keys)
+
+  if invalid.length > 0 then throw new Error "Required parameters missing: #{invalid.join ', '}"
+
+
+exports.omit = (object, key) ->
+  result = Object.assign {}, object
+  delete result[key]
+  return result
