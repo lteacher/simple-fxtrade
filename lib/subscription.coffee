@@ -7,7 +7,7 @@ class Subscription extends EventEmitter
 
     @connected = false
     @stream = stream
-    @options = Object.assign {}, json: true, options
+    @options = Object.assign {}, options
 
     @stream.on 'data', (data) =>
       @connected = true
@@ -29,6 +29,6 @@ class Subscription extends EventEmitter
 
   disconnect: ->
     @connected = false
-    @stream.abort()
+    @stream.req.abort()
 
 module.exports = Subscription

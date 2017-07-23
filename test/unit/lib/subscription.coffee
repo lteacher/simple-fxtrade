@@ -3,7 +3,10 @@
 Subscription = require '../../../lib/subscription'
 
 class MockEmitter extends EventEmitter
-  abort: -> @emit 'end', 'its done!'
+  constructor: ->
+    super()
+
+    @req = abort: => @emit 'end', 'its done!'
 
 describe 'Subscription', ->
   describe '#constructor', ->

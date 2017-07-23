@@ -3,13 +3,13 @@ td = require 'testdouble'
 contains = td.matchers.contains
 
 fx = {}
-rp = {}
+axios = {}
 
 id = '101-011-5748031-001'
 
 describe 'orders', ->
   before ->
-    rp = td.replace 'request-promise-native'
+    axios = td.replace 'axios'
     fx = require '../../../index'
     fx.setAccount id
 
@@ -28,24 +28,24 @@ describe 'orders', ->
 
       fx.orders.create {order}
 
-      td.verify rp contains
-        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders"
+      td.verify axios contains
+        url: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders"
         method: 'POST'
-        body: {order}
+        data: {order}
 
   describe 'GET /accounts/:accountId/orders[/:id]', ->
     it 'should pass the parameters get the orders for an account', ->
       fx.orders()
 
-      td.verify rp contains
-        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders"
+      td.verify axios contains
+        url: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders"
         method: 'GET'
 
     it 'should pass the parameters get an order by id for an account', ->
       fx.orders id: 1234
 
-      td.verify rp contains
-        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders/1234"
+      td.verify axios contains
+        url: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders/1234"
         method: 'GET'
 
   describe 'PUT /accounts/:accountId/orders/:id', ->
@@ -63,10 +63,10 @@ describe 'orders', ->
 
       fx.orders.replace {id: 1234, order}
 
-      td.verify rp contains
-        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders/1234"
+      td.verify axios contains
+        url: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders/1234"
         method: 'PUT'
-        body: {order}
+        data: {order}
 
   describe 'PUT /accounts/:accountId/orders/:id/cancel', ->
     it 'should throw an error if missing required params', ->
@@ -75,8 +75,8 @@ describe 'orders', ->
     it 'should pass the parameters to cancel an order', ->
       fx.orders.cancel id: 1234
 
-      td.verify rp contains
-        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders/1234/cancel"
+      td.verify axios contains
+        url: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders/1234/cancel"
         method: 'PUT'
 
   describe 'PUT /accounts/:accountId/orders/:id/clientExtensions', ->
@@ -89,7 +89,7 @@ describe 'orders', ->
 
       fx.orders.clientExtensions {id: 1234, clientExtensions, tradeClientExtensions}
 
-      td.verify rp contains
-        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders/1234/clientExtensions"
+      td.verify axios contains
+        url: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/orders/1234/clientExtensions"
         method: 'PUT'
-        body: {clientExtensions, tradeClientExtensions}
+        data: {clientExtensions, tradeClientExtensions}

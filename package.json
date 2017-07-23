@@ -41,8 +41,7 @@
     "webpack": "^3.3.0"
   },
   "dependencies": {
-    "request": "^2.81.0",
-    "request-promise-native": "^1.0.3"
+    "axios": "^0.16.2"
   },
   "keywords": [
     "forex",

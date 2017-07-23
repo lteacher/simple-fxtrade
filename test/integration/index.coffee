@@ -73,13 +73,15 @@ describe '--- Integration Tests ---', ->
         fx.setAccount id
         expect(-> fx.pricing.stream()).to.throw 'Required parameters missing: instruments'
 
-      it 'should subscribe to the pricing stream', (done) ->
+      it 'should subscribe to the pricing stream', ->
         fx.setAccount id
-        stream = fx.pricing.stream instruments: 'AUD_USD'
-        stream.on 'data', ({type}) ->
+        stream = await fx.pricing.stream instruments: 'AUD_USD'
+
+        new Promise (resolve) -> stream.on 'data', ({type}) ->
           expect(type).to.match /PRICE|HEARTBEAT/
           stream.disconnect()
-          done()
+          resolve()
+
 
   describe 'transactions', ->
     describe 'GET /accounts/:accountId/transactions[/:id]', ->
@@ -96,13 +98,13 @@ describe '--- Integration Tests ---', ->
         expect(alias).to.be.equal 'Default'
 
     describe 'GET /accounts/:accountId/transactions/stream', ->
-      it 'should subscribe to the transactions stream', (done) ->
+      it 'should subscribe to the transactions stream', ->
         fx.setAccount id
-        stream = fx.transactions.stream()
-        stream.on 'data', ({type}) ->
+        stream = await fx.transactions.stream()
+        new Promise (resolve) -> stream.on 'data', ({type}) ->
           expect(type).to.be.equal 'HEARTBEAT'
           stream.disconnect()
-          done()
+          resolve()
 
   # TODO: Need to fix up these integration tests. Problem is they depend
   # on timing and other irritating factors

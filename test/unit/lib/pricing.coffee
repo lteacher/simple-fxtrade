@@ -3,13 +3,13 @@ td = require 'testdouble'
 contains = td.matchers.contains
 
 fx = {}
-rp = {}
+axios = {}
 
 id = '101-011-5748031-001'
 
 describe 'pricing', ->
   before ->
-    rp = td.replace 'request-promise-native'
+    axios = td.replace 'axios'
     fx = require '../../../index'
     fx.setAccount id
 
@@ -20,7 +20,7 @@ describe 'pricing', ->
     it 'should pass the parameters to get the pricing for a list of instruments', ->
       fx.pricing instruments: 'AUD_USD'
 
-      td.verify rp contains
-        uri: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/pricing"
+      td.verify axios contains
+        url: "https://api-fxpractice.oanda.com/v3/accounts/#{id}/pricing"
         method: 'GET'
-        qs: instruments: 'AUD_USD'
+        params: instruments: 'AUD_USD'
