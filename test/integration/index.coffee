@@ -102,7 +102,7 @@ describe '--- Integration Tests ---', ->
         fx.setAccount id
         stream = await fx.transactions.stream()
         new Promise (resolve) -> stream.on 'data', ({type}) ->
-          expect(type).to.be.equal 'HEARTBEAT'
+          expect(type).to.match /HEARTBEAT|CLIENT_CONFIGURE/
           stream.disconnect()
           resolve()
 
