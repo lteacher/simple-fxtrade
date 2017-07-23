@@ -11,7 +11,7 @@
 
 This package is a wrapper around the [Oanda Rest-v20 api][oanda-api]. All request parameters, payloads or response structures are documented there so you won't find that information here.
 
-The purpose of this package is to simplify the url constructions and expose the endpoints in a nice way for any Nodejs based projects. The package should also work as described in browsers via `fx` global or by `require` / `import`. 
+The purpose of this package is to simplify the url constructions and expose the endpoints in a nice way for any Nodejs based projects. The package should also work as described in browsers via `fx` global or by `require` / `import`.
 
 Here is an example:
 
@@ -63,7 +63,7 @@ fx.configure({
   version: 'v3',      // Probably never need to change this
   accountId: '23243', // Set this if you know the accountId up front
   dateTimeFormat: 'RFC3339', // Per oanda documentation
-  throwHttpErrors : true // * See notes
+  fullResponse : true // * See notes
 });
 
 // You needn't set all values, a more realistic example may be like
@@ -72,11 +72,22 @@ fx.configure({ live: true, accountId: '111-002-111-2' });
 
 - `apiKey` - Default: env variable `OANDA_API_KEY`. Sets the `Authorization` header key.  Best practice would be to use some config or env management package to set this and never pass the value. But you can if you want.
 
-- `live` - Default: false. This affects the endpoint url. If set to true the host is `fxtrade.oanda.com`, when false its `fxpractice.oanda.com`
+- `live` - Default: `false`. This affects the endpoint url. If set to true the host is `fxtrade.oanda.com`, when false its `fxpractice.oanda.com`
 
-- `accountId` - Default: not set. If you know the accountId you could set it here. Most endpoints need the accountId set
+- `accountId` - Default: `not set`. If you know the accountId you could set it here. Most endpoints need the accountId set
 
-- `throwHttpErrors` translates directly to the [`request-promise`][request-promise] package options `simple` and `resolveWithFullResponse`. How this relates is that when true, error http codes will return as a rejection and successful responses only resolve the `body` of the response. If false, all responses resolve and the response has all of the `httpResponse` properties, such as `statusCode`
+- `fullResponse` - Default: `false`. When this not set to true, you get a short form response for all requests like the following:
+
+    ```json5
+{
+    status: 200,
+    headers: {}, // Some headers
+    candles: []  // The relevant payload that you would expect
+}
+    ```
+
+    if the `fullResponse` is set to true then you get a full [`axios`](https://github.com/mzabriskie/axios) response.
+
 
 If you are messing around on a demo account, with the `OANDA_API_KEY` set, then you may never need to use `configure`. Instead you can just use `setAccount`, in fact for most of the endpoints you must set the account before hand. Heres what it might look like if you maybe know the id.
 
@@ -212,7 +223,7 @@ Good news, both the `pricing` and the `transactions` streams are implemented. He
 
 ```javascript
 // GET /accounts/:accountId/pricing/stream?instruments=AUD_USD
-const stream = fx.pricing.stream({ instruments: 'AUD_USD' });
+const stream = await fx.pricing.stream({ instruments: 'AUD_USD' });
 
 // Handle some data
 stream.on('data', data => {

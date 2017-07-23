@@ -1,4 +1,5 @@
 {EventEmitter} = require 'events'
+{assign} = require './utils'
 
 class Subscription extends EventEmitter
   constructor: (stream, options) ->
@@ -7,7 +8,7 @@ class Subscription extends EventEmitter
 
     @connected = false
     @stream = stream
-    @options = Object.assign {}, options
+    @options = assign {}, options
 
     @stream.on 'data', (data) =>
       @connected = true

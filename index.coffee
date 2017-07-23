@@ -1,7 +1,7 @@
 axios = require 'axios'
 resources = require './lib'
 Subscription = require './lib/subscription'
-{omit} = require './lib/utils'
+{omit, assign} = require './lib/utils'
 
 # Return a replacement with the new httpMethod
 fx = (method) ->
@@ -10,7 +10,7 @@ fx = (method) ->
 
 # Allows configuration of the fx api
 fx.configure = (options) ->
-  @options = Object.assign {}, @options, options
+  @options = assign {}, @options, options
 
 # Set the account id context as its needed for most routes
 fx.setAccount = (id) -> @options.accountId = id
@@ -41,8 +41,6 @@ fx.request = (req, route, checkAccount = true) ->
       'Accept-Datetime-Format': @options.dateTimeFormat
     data: req.body
     params: omit req, 'body'
-    # resolveWithFullResponse: not @options.throwHttpErrors
-    # simple: @options.throwHttpErrors
     responseType
   }
 
@@ -53,10 +51,10 @@ fx.request = (req, route, checkAccount = true) ->
   # TODO: The ? are hacks because of the annoying testdouble framework
   # Need to remove them from here and also from the subscribe below
   return deferred
-    ?.then ({status, headers, data}) -> Object.assign {}, {status, headers}, data
+    ?.then ({status, headers, data}) -> assign {}, {status, headers}, data
     ?.catch ({response}) ->
       {status, headers, data} = response
-      Promise.reject Object.assign {}, {status, headers}, data
+      Promise.reject assign {}, {status, headers}, message: data
 
 
 fx.subscribe = (req, route, checkAccount = true) ->
@@ -117,7 +115,7 @@ bootstrap = ->
   }
 
   # Attach additional functions to the api
-  Object.assign fx, resources
+  assign fx, resources
 
   return _bindAll resources, fx
 
