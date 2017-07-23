@@ -1,8 +1,7 @@
-rp = require 'request-promise-native'
-request = require 'request'
+axios = require 'axios'
 resources = require './lib'
 Subscription = require './lib/subscription'
-{omit} = require './lib/utils'
+{omit, assign} = require './lib/utils'
 
 # Return a replacement with the new httpMethod
 fx = (method) ->
@@ -11,7 +10,7 @@ fx = (method) ->
 
 # Allows configuration of the fx api
 fx.configure = (options) ->
-  @options = Object.assign {}, @options, options
+  @options = assign {}, @options, options
 
 # Set the account id context as its needed for most routes
 fx.setAccount = (id) -> @options.accountId = id
@@ -30,37 +29,51 @@ fx.request = (req, route, checkAccount = true) ->
   method = @method ? 'GET'
   @method = null
 
-  return rp {
+  responseType = 'json'
+
+  if req.json? and !req.json then responseType = 'text'
+
+  options = {
     method
-    uri: req.uri ? @endpoint route
+    url: req.url ? @endpoint route
     headers:
       Authorization: "Bearer #{@options.apiKey}"
       'Accept-Datetime-Format': @options.dateTimeFormat
-    body: req.body
-    qs: omit req, 'body'
-    resolveWithFullResponse: not @options.throwHttpErrors
-    simple: @options.throwHttpErrors
-    json: req.json ? true
+    data: req.body
+    params: omit req, 'body'
+    responseType
   }
+
+  deferred = axios options
+
+  if @options.fullResponse then return deferred
+
+  # TODO: The ? are hacks because of the annoying testdouble framework
+  # Need to remove them from here and also from the subscribe below
+  return deferred
+    ?.then ({status, headers, data}) -> assign {}, {status, headers}, data
+    ?.catch ({response}) ->
+      {status, headers, data} = response
+      Promise.reject assign {}, {status, headers}, data
+
 
 fx.subscribe = (req, route, checkAccount = true) ->
   _validateRequest @options, checkAccount
 
   options = {
-    method: @method
-    uri: req.uri ? @endpoint route, 'stream'
+    method: 'GET'
+    url: req.url ? @endpoint route, 'stream'
     headers:
       Authorization: "Bearer #{@options.apiKey}"
       'Accept-Datetime-Format': @options.dateTimeFormat
-    qs: omit req, 'body'
-    json: req.json ? true
+    params: omit req, 'body'
+    responseType: 'stream'
   }
 
   @method = null
 
-  return new Subscription request(options, (err, res) ->
-    if err then throw new Error "Failed to subscribe to: #{options.uri}"
-  ), json: options.json
+  axios(options)?.then ({data}) -> new Subscription data, json: req.json ? true
+
 
 # Get the fx api endpoint adjusted per route
 fx.endpoint = (route = '', mode = 'api') ->
@@ -102,7 +115,7 @@ bootstrap = ->
   }
 
   # Attach additional functions to the api
-  Object.assign fx, resources
+  assign fx, resources
 
   return _bindAll resources, fx
 

@@ -5,8 +5,9 @@ exports.validate = (req, required) ->
 
   if invalid.length > 0 then throw new Error "Required parameters missing: #{invalid.join ', '}"
 
+exports.assign = require 'lodash/assign'
 
 exports.omit = (object, key) ->
-  result = Object.assign {}, object
+  result = exports.assign {}, object
   delete result[key]
   return result
