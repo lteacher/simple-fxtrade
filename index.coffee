@@ -54,7 +54,7 @@ fx.request = (req, route, checkAccount = true) ->
     ?.then ({status, headers, data}) -> assign {}, {status, headers}, data
     ?.catch ({response}) ->
       {status, headers, data} = response
-      Promise.reject assign {}, {status, headers}, message: data
+      Promise.reject assign {}, {status, headers}, data
 
 
 fx.subscribe = (req, route, checkAccount = true) ->
