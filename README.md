@@ -63,7 +63,7 @@ fx.configure({
   version: 'v3',      // Probably never need to change this
   accountId: '23243', // Set this if you know the accountId up front
   dateTimeFormat: 'RFC3339', // Per oanda documentation
-  fullResponse : true // * See notes
+  fullResponse : false // * See notes
 });
 
 // You needn't set all values, a more realistic example may be like
@@ -78,13 +78,15 @@ fx.configure({ live: true, accountId: '111-002-111-2' });
 
 - `fullResponse` - Default: `false`. When this not set to true, you get a short form response for all requests like the following:
 
+
     ```json5
-{
-    status: 200,
-    headers: {}, // Some headers
-    candles: []  // The relevant payload that you would expect
-}
+    {
+      status: 200,
+      headers: {}, // Some headers
+      candles: []  // The relevant payload that you would expect
+    }
     ```
+
 
     if the `fullResponse` is set to true then you get a full [`axios`](https://github.com/mzabriskie/axios) response.
 
