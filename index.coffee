@@ -52,7 +52,11 @@ fx.request = (req, route, checkAccount = true) ->
   # Need to remove them from here and also from the subscribe below
   return deferred
     ?.then ({status, headers, data}) -> assign {}, {status, headers}, data
-    ?.catch ({response}) ->
+    ?.catch (err) ->
+      # If no response param then return the whole error
+      unless err?.response?.status then return Promise.reject err
+
+      {response} = err
       {status, headers, data} = response
       Promise.reject assign {}, {status, headers}, data
 

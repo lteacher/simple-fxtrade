@@ -1,6 +1,6 @@
 {
   "name": "simple-fxtrade",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A node js wrapper for the Oanda Rest v20 api to make things really simple",
   "main": "dist/node.js",
   "browser": "dist/browser.js",
