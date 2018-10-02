@@ -23,22 +23,22 @@
   "author": "hugo.armstrong@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-loader": "^7.1.1",
-    "babel-preset-env": "^1.6.0",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
     "chai": "^3.5.0",
     "coffee-coverage": "^2.0.1",
     "coffeelint": "github:lteacher/coffeelint#build-cs2",
     "coffeelint-newline-at-eof": "^0.4.1",
-    "coffeescript": "^2.0.0-beta3",
-    "coveralls": "^2.13.0",
+    "coffeescript": "^2.3.2",
+    "coveralls": "^2.13.3",
     "dotenv": "^4.0.0",
     "json-loader": "^0.5.4",
-    "lodash": "^4.17.4",
-    "mocha": "^3.2.0",
+    "lodash": "^4.17.11",
+    "mocha": "^3.5.3",
     "nyc": "^10.2.0",
     "testdouble": "^2.1.2",
-    "webpack": "^3.3.0"
+    "webpack": "^3.12.0"
   },
   "dependencies": {
     "axios": "^0.16.2"
