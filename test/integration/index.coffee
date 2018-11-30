@@ -45,7 +45,7 @@ describe '--- Integration Tests ---', ->
     describe 'GET /accounts/:id/changes', ->
       it 'should return the account changes', ->
         fx.setAccount id
-        {changes: {transactions}} = await fx.changes sinceTransactionID: 347
+        {changes: {transactions}} = await fx.changes sinceTransactionID: 364
 
         expect(_.isEmpty transactions).to.not.be.ok
 
