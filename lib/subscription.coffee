@@ -12,7 +12,12 @@ class Subscription extends EventEmitter
 
     @stream.on 'data', (data) =>
       @connected = true
-      if @options.json then data = JSON.parse data.toString()
+      if @options.json
+        str = data.toString()
+
+        if !str then return
+
+        data = JSON.parse str
 
       @emit 'data', data
 
