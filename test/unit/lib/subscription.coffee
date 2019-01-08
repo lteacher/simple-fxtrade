@@ -44,6 +44,15 @@ describe 'Subscription', ->
 
       emitter.emit 'data', '{"stuff":"worked"}'
 
+    it 'should not explode if the data is empty and no event should be emitted', (done) ->
+      emitter = new MockEmitter
+      sub = new Subscription emitter, json: true
+      sub.on 'data', (data) -> expect.fail()
+
+      emitter.emit 'data', Buffer.from ''
+      sub.on 'end', -> done()
+      sub.disconnect()
+
   describe '#on end / disconnect', ->
     it 'should disconnect the subscription', (done) ->
       emitter = new MockEmitter
