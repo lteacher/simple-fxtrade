@@ -74,6 +74,21 @@ describe 'Subscription', ->
       '
       sub.disconnect()
 
+    it 'should emit an error when json data is not parsed successfully', (done) ->
+      sub = new Subscription emitter, json: true
+      dataHandler = td.func()
+      errorHandler = td.func()
+      sub.on 'data', dataHandler
+      sub.on 'error', errorHandler
+      sub.on 'end', ->
+        expect(td.explain(dataHandler).callCount).to.equal 0
+        expect(td.explain(errorHandler).callCount).to.equal 1
+        expect(td.explain(errorHandler).calls[0].args[0].message).to.match /Subscription error parsing Oanda response/
+        done()
+
+      emitter.emit 'data', '}{}\n}invalid json'
+      sub.disconnect()
+
 
   describe '#on end / disconnect', ->
     it 'should disconnect the subscription', (done) ->
