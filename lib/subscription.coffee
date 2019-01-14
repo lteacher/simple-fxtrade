@@ -16,16 +16,23 @@ class Subscription extends EventEmitter
       # On some occasions OANDA will send multiple JSON messages into the stream
       # which are separated by newline. In those instances we split and parse each
       # message individually ignoring empty strings.
-      messages = switch
-        when @options.json
-          data
-            .toString()
-            .split /\r?\n/
-            .filter Boolean
-            .map JSON.parse
-        else [data]
+      try
+        messages = switch
+          when @options.json
+            data
+              .toString()
+              .split /\r?\n/
+              .filter Boolean
+              .map JSON.parse
+          else [data]
 
-      messages.forEach (message) => @emit 'data', message
+        messages.forEach (message) => @emit 'data', message
+      catch {message}
+        @emit 'error', new Error """
+          Subscription error parsing Oanda response:
+          Message: #{message}
+          Data string: #{data.toString()}
+        """
 
     @stream.on 'error', (error) =>
       @connected = false
